@@ -18,6 +18,7 @@ import Register from "../Register/Register";
         {
             path: '/',
             element: <Home></Home>,
+            loader: () => fetch(`${import.meta.env.VITE_API_URL}/plant`)
         },
         {
             path: '/allProduct',
