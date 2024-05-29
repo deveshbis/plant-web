@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 
 const Register = () => {
-    const { createUser, updateUserProfile } = useAuth()
+    const { createUser, updateUserProfile, setReload } = useAuth()
     const navigate = useNavigate();
     const from = '/login';
 
@@ -25,6 +25,7 @@ const Register = () => {
                     .then(() => {
                         toast.success("Registration successful!");
                         navigate(from, { replace: true });
+                        setReload(true)
                     })
             }).catch(error => {
                 toast.error(`Failed to register: ${error.message}`);

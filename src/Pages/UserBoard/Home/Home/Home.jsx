@@ -5,7 +5,7 @@ import PlantCardTitle from "../PlantCard/PlantCardTitle";
 
 const Home = () => {
     const plants = useLoaderData()
-    console.log(plants);
+    // console.log(plants);
     return (
         <div>
             <Banner />

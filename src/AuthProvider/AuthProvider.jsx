@@ -1,15 +1,23 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../Firebase/firebase.config";
 
 
 export const AuthContext = createContext(null);
+
+const googleProvider = new GoogleAuthProvider();
+const gitHubProvider = new GithubAuthProvider();
+
+
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [reload, setReload] = useState(false);
 
     //create User
     const createUser = (email, password) => {
+        setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
@@ -21,14 +29,29 @@ const AuthProvider = ({ children }) => {
         })
     }
 
-
     //sign in user
     const signInUser = (email, password) => {
+        setLoading(true);
         return signInWithEmailAndPassword(auth, email, password)
+    }
+
+
+    //google login
+    const googleLogin = () => {
+        setLoading(true);
+        return signInWithPopup(auth, googleProvider)
+    }
+
+
+    //githu login
+    const gitHubLogin = () => {
+        setLoading(true);
+        return signInWithPopup(auth, gitHubProvider)
     }
 
     //logout
     const logoutUser = () => {
+        setLoading(true);
         setUser(null);
         signOut(auth);
 
@@ -39,21 +62,26 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUser(user)
-            } else {
-                // User is signed out
-                // ...
+                setUser(user);
+                setLoading(false);
+            }
+            else{
+                setLoading(false); 
             }
         });
         return () => unSubscribe();
-    }, [])
+    }, [reload])
 
     const allValue = {
+        user,
+        loading,
         createUser,
         signInUser,
-        updateUserProfile,
+        googleLogin,
+        gitHubLogin,
         logoutUser,
-        user
+        updateUserProfile,
+        setReload
     }
     return (
         <AuthContext.Provider value={allValue}>

@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../../../Hooks/useAuth";
 
 
 const NavBar = () => {
-    // const { user, logoutUser } = useAuth();
+    const { user, logoutUser } = useAuth();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };
 
-    // const [isHovering, setIsHovering] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
 
-    // const handleMouseEnter = () => {
-    //     setIsHovering(true);
-    // };
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+    };
 
-    // const handleMouseLeave = () => {
-    //     setIsHovering(false);
-    // };
+    const handleMouseLeave = () => {
+        setIsHovering(false);
+    };
     const navLinks = (
         <>
             <li><NavLink to='/'>Home</NavLink></li>
@@ -49,7 +50,7 @@ const NavBar = () => {
                 </ul>
             </div>
             <div className="navbar-end flex items-center space-x-4">
-                {/* {user ? (
+                {user ? (
                     <div className="flex items-center space-x-4 relative">
                         <div
                             className="dropdown dropdown-end"
@@ -69,8 +70,8 @@ const NavBar = () => {
                     </div>
                 ) : (
                     <Link to='/login'><button className="text-white bg-black p-2 border-black rounded-xl font-semibold text-[16px]">Login</button></Link>
-                )} */}
-                <Link to='/login'><button className="text-white bg-black p-2 border-black rounded-xl font-semibold text-[16px]">Login</button></Link>
+                )}
+                
             </div>
         </div>
     );

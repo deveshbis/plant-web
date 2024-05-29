@@ -3,10 +3,11 @@ import ban1 from "../../../assets/banner/banner6.jpg"
 import useAuth from "../../../Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import SocialLogin from "./SocialLogin";
 
 
 const Login = () => {
-    const {signInUser} = useAuth();
+    const { signInUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -19,15 +20,15 @@ const Login = () => {
     const onSubmit = (data) => {
         const { email, password } = data;
         signInUser(email, password)
-        .then(result=>{
-            toast.success("login successful!");
-            if(result.user){
-                toast.success("Login successful!");
-                navigate(from);
-            }
-        }).catch(error => {
-            toast.error(`Failed to register: ${error.message}`);
-        });
+            .then(result => {
+                toast.success("login successful!");
+                if (result.user) {
+                    toast.success("Login successful!");
+                    navigate(from);
+                }
+            }).catch(error => {
+                toast.error(`Failed to register: ${error.message}`);
+            });
     }
     return (
         <section className="relative flex flex-wrap lg:h-screen lg:items-center">
@@ -87,7 +88,8 @@ const Login = () => {
                     </div>
                 </form>
 
-                
+                <div className="divider divider-neutral">Login With</div>
+                <SocialLogin></SocialLogin>
             </div>
 
             <div className="relative h-64 w-full sm:h-96 lg:h-full lg:w-1/2">
