@@ -1,14 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ban1 from "../../../assets/banner/banner4.jpg"
+import useAuth from "../../../Hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 
 const Register = () => {
+    const { createUser, updateUserProfile } = useAuth()
+    const navigate = useNavigate();
+    const from = '/login';
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm()
+
+    const onSubmit = (data) => {
+        const { email, password, image, fullName } = data;
+        createUser(email, password)
+            .then(() => {
+                toast.success("Registration successful!");
+                updateUserProfile(fullName, image)
+                    .then(() => {
+                        toast.success("Registration successful!");
+                        navigate(from, { replace: true });
+                    })
+            }).catch(error => {
+                toast.error(`Failed to register: ${error.message}`);
+            });
+    };
     return (
         < section className="bg-white" >
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                 <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
                     <img
                         alt=""
-                        src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                        src={ban1}
                         className="absolute inset-0 h-full w-full object-cover opacity-80"
                     />
 
@@ -72,32 +100,23 @@ const Register = () => {
                             </p>
                         </div>
 
-                        <form action="#" className="mt-8 grid grid-cols-6 gap-6">
-                            <div className="col-span-6 sm:col-span-3">
-                                <label htmlFor="FirstName" className="block text-sm font-medium text-gray-700">
-                                    First Name
+                        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 grid grid-cols-6 gap-6">
+                            <div className="col-span-6">
+                                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                                    Full Name
                                 </label>
 
                                 <input
                                     type="text"
-                                    id="FirstName"
-                                    name="first_name"
+                                    id="fullName"
+                                    name="full_name"
+                                    {...register("full_name", { required: true })}
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
+                                {errors.full_name && <span className="text-red-700">This field is required</span>}
                             </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label htmlFor="LastName" className="block text-sm font-medium text-gray-700">
-                                    Last Name
-                                </label>
 
-                                <input
-                                    type="text"
-                                    id="LastName"
-                                    name="last_name"
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                                />
-                            </div>
 
                             <div className="col-span-6">
                                 <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
@@ -106,56 +125,37 @@ const Register = () => {
                                     type="email"
                                     id="Email"
                                     name="email"
+                                    {...register("email", { required: true })}
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
+                                {errors.email && <span className="text-red-700">This field is required</span>}
+                            </div>
+                            <div className="col-span-6 ">
+                                <label htmlFor="PasswordConfirmation" className="block text-sm font-medium text-gray-700">
+                                    Photo URL
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="photoUrl"
+                                    name="photo_url"
+                                    {...register("photo_url", { required: true })}
+                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                />
+                                {errors.photo_url && <span className="text-red-700">This field is required</span>}
                             </div>
 
-                            <div className="col-span-6 sm:col-span-3">
+                            <div className="col-span-6">
                                 <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
 
                                 <input
                                     type="password"
                                     id="Password"
                                     name="password"
+                                    {...register("password", { required: true })}
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label htmlFor="PasswordConfirmation" className="block text-sm font-medium text-gray-700">
-                                    Password Confirmation
-                                </label>
-
-                                <input
-                                    type="password"
-                                    id="PasswordConfirmation"
-                                    name="password_confirmation"
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                                />
-                            </div>
-
-                            <div className="col-span-6">
-                                <label htmlFor="MarketingAccept" className="flex gap-4">
-                                    <input
-                                        type="checkbox"
-                                        id="MarketingAccept"
-                                        name="marketing_accept"
-                                        className="size-5 rounded-md border-gray-200 bg-white shadow-sm"
-                                    />
-
-                                    <span className="text-sm text-gray-700">
-                                        I want to receive emails about events, product updates and company announcements.
-                                    </span>
-                                </label>
-                            </div>
-
-                            <div className="col-span-6">
-                                <p className="text-sm text-gray-500">
-                                    By creating an account, you agree to our
-                                    <a href="#" className="text-gray-700 underline"> terms and conditions </a>
-                                    and
-                                    <a href="#" className="text-gray-700 underline">privacy policy</a>.
-                                </p>
+                                {errors.password && <span className="text-red-700">This field is required</span>}
                             </div>
 
                             <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
@@ -167,7 +167,7 @@ const Register = () => {
 
                                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                                     Already have an account?
-                                    <Link to='/login'>Log in</Link>
+                                    <Link to='/login' className="ml-3">Log in</Link>
                                 </p>
                             </div>
                         </form>
